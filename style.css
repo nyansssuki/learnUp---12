@@ -1,0 +1,95 @@
+/* Font dan warna utama */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f8fa;
+  color: #012A4A;
+}
+
+/* Container utama */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Kartu form */
+.card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 40px 50px;
+  width: 360px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 24px;
+  color: #012A4A;
+}
+
+/* Input group */
+.input-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #89C2D9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #014F86;
+}
+
+/* Tombol utama */
+.btn {
+  background-color: #012A4A;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background-color: #014F86;
+}
+
+/* Link bawah */
+.link {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.link a {
+  color: #014F86;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link a:hover {
+  text-decoration: underline;
+}
+
+.error-msg {
+  color: red;
+  font-size: 13px;
+  margin-top: 10px;
+}

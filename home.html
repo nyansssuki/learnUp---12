@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnUp - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>Selamat Datang di LearnUp 🎓</h2>
+      <p id="welcomeMsg"></p>
+      <button id="logoutBtn" class="btn">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!currentUser) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("welcomeMsg").textContent = `Halo, ${currentUser.fullname}!`;
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
