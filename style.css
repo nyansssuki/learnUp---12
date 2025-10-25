@@ -6,7 +6,7 @@ body {
   color: #012A4A;
 }
 
-/* Container utama */
+/* Container utama (LOGIN) */
 .container {
   display: flex;
   justify-content: center;
@@ -14,7 +14,7 @@ body {
   height: 100vh;
 }
 
-/* Kartu form */
+/* Kartu form (LOGIN) */
 .card {
   background-color: white;
   border-radius: 16px;
@@ -92,4 +92,268 @@ input:focus {
   color: red;
   font-size: 13px;
   margin-top: 10px;
+}
+
+/* ======================= */
+/* ===== DASHBOARD ======= */
+/* ======================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #012A4A;
+  color: white;
+  padding: 15px 40px;
+}
+
+.nav-left h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0.5px;
+}
+
+.nav-right img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* Layout utama dashboard */
+.dashboard-wrapper {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 30px;
+  padding: 40px 60px;
+}
+
+/* ====== Modul Section ====== */
+.modules-section h2 {
+  margin-bottom: 20px;
+}
+
+.modules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.module-card {
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.module-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #012A4A;
+}
+
+.module-card p {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.module-btn {
+  margin-top: 10px;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* Progress bar tiap modul */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #014F86;
+  width: 0;
+  transition: width 0.4s ease-in-out;
+  border-radius: 6px;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #012A4A;
+  text-align: left;
+}
+
+/* ====== Sidebar Progress ====== */
+.progress-section {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.progress-section h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.progress-bar.total {
+  height: 12px;
+  border-radius: 10px;
+  background-color: #e0e0e0;
+}
+
+#progressFill {
+  height: 100%;
+  background-color: #014F86;
+  border-radius: 10px;
+}
+
+#progressText {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #012A4A;
+}
+
+/* Responsif */
+@media (max-width: 900px) {
+  .dashboard-wrapper {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .progress-section {
+    order: -1;
+  }
+}
+
+/* ========== NAVBAR TAMBAHAN ========== */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-left a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-left a:hover {
+  text-decoration: underline;
+}
+
+/* Profil dan dropdown */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  color: white;
+}
+
+.user-info span {
+  font-weight: 600;
+}
+
+.user-info p {
+  font-size: 0.9em;
+  color: #ccc;
+  margin: 0;
+}
+
+/* Dropdown */
+.profile-dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-pic {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: 0.3s;
+}
+
+.profile-pic:hover {
+  border-color: #89C2D9;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 55px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-menu button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: #012A4A;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f0f0f0;
+}
+
+/* =============================== */
+/* ===== NAVBAR IMPROVEMENT ===== */
+/* =============================== */
+
+/* Membuat posisi teks dashboard di tengah navbar */
+.navbar {
+  position: relative;
+  justify-content: space-between;
+}
+
+/* Tulisan "LearnUp" di kiri */
+.nav-left h2 {
+  font-size: 22px;
+  color: white;
+  margin-right: 30px;
+}
+
+/* Tulisan "Dashboard" di tengah navbar */
+.nav-title-center a {
+  color: white;
+  text-decoration: none; /* Hilangkan garis bawah */
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* (Opsional) Tambahkan efek hover halus */
+.nav-title-center a:hover {
+  opacity: 0.8;
 }
