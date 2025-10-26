@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnUp - Pencarian</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #012A4A 0%, #013a63 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: #012A4A;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #012A4A;
+            box-shadow: 0 0 0 3px rgba(1, 42, 74, 0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #012A4A;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #013a63;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #012A4A;
+        }
+
+        .filter-group select {
+            padding: 0.7rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #012A4A;
+        }
+
+        .results-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #012A4A;
+            font-weight: 600;
+        }
+
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sort-options select {
+            padding: 0.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #012A4A;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .result-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 15px rgba(1, 42, 74, 0.1);
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #012A4A;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-meta span {
+            background: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .result-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-subtext {
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .search-box, .results-container {
+                padding: 1.5rem;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🎓 LearnUp - Pencarian Materi</h1>
+    </nav>
+
+    <div class="container">
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari materi pembelajaran, video, latihan soal...">
+                <button class="search-btn" onclick="performSearch()">🔍 Cari</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Mata Pelajaran</label>
+                    <select id="subjectFilter" onchange="performSearch()">
+                        <option value="">Semua Mata Pelajaran</option>
+                        <option value="matematika">Matematika</option>
+                        <option value="fisika">Fisika</option>
+                        <option value="kimia">Kimia</option>
+                        <option value="biologi">Biologi</option>
+                        <option value="bahasa">Bahasa Indonesia</option>
+                        <option value="english">Bahasa Inggris</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Tingkat Kesulitan</label>
+                    <select id="difficultyFilter" onchange="performSearch()">
+                        <option value="">Semua Tingkat</option>
+                        <option value="mudah">Mudah</option>
+                        <option value="sedang">Sedang</option>
+                        <option value="sulit">Sulit</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Jenis Konten</label>
+                    <select id="typeFilter" onchange="performSearch()">
+                        <option value="">Semua Jenis</option>
+                        <option value="materi">Materi Bacaan</option>
+                        <option value="video">Video</option>
+                        <option value="latihan">Latihan Soal</option>
+                        <option value="quiz">Quiz</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container">
+            <div class="results-header">
+                <div class="results-count" id="resultsCount">Menampilkan semua materi</div>
+                <div class="sort-options">
+                    <label>Urutkan:</label>
+                    <select id="sortBy" onchange="sortResults()">
+                        <option value="relevance">Relevansi</option>
+                        <option value="newest">Terbaru</option>
+                        <option value="popular">Terpopuler</option>
+                        <option value="title">Judul A-Z</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="resultsArea"></div>
+        </div>
+    </div>
+
+    <script>
+        const allMaterials = [
+            {
+                title: "Persamaan Kuadrat - Konsep Dasar",
+                subject: "matematika",
+                difficulty: "sedang",
+                type: "materi",
+                description: "Pelajari konsep dasar persamaan kuadrat, cara menyelesaikannya dengan berbagai metode termasuk pemfaktoran dan rumus ABC.",
+                date: "2025-10-20"
+            },
+            {
+                title: "Video Tutorial: Hukum Newton",
+                subject: "fisika",
+                difficulty: "mudah",
+                type: "video",
+                description: "Video pembelajaran interaktif tentang tiga hukum Newton dengan contoh penerapan dalam kehidupan sehari-hari.",
+                date: "2025-10-22"
+            },
+            {
+                title: "Latihan Soal: Tata Nama Senyawa",
+                subject: "kimia",
+                difficulty: "sedang",
+                type: "latihan",
+                description: "Kumpulan soal latihan tentang tata nama senyawa kimia organik dan anorganik dengan pembahasan lengkap.",
+                date: "2025-10-19"
+            },
+            {
+                title: "Sistem Pencernaan Manusia",
+                subject: "biologi",
+                difficulty: "mudah",
+                type: "materi",
+                description: "Materi lengkap tentang sistem pencernaan manusia, organ-organ pencernaan, dan proses pencernaan makanan.",
+                date: "2025-10-25"
+            },
+            {
+                title: "Quiz: Tenses Bahasa Inggris",
+                subject: "english",
+                difficulty: "sedang",
+                type: "quiz",
+                description: "Quiz interaktif untuk menguji pemahaman tentang 12 tenses dalam Bahasa Inggris dengan feedback otomatis.",
+                date: "2025-10-23"
+            },
+            {
+                title: "Materi Teks Argumentasi",
+                subject: "bahasa",
+                difficulty: "mudah",
+                type: "materi",
+                description: "Pelajari struktur dan ciri-ciri teks argumentasi beserta contoh-contoh dalam kehidupan sehari-hari.",
+                date: "2025-10-21"
+            },
+            {
+                title: "Integral Tak Tentu - Level Advance",
+                subject: "matematika",
+                difficulty: "sulit",
+                type: "materi",
+                description: "Pembahasan mendalam tentang integral tak tentu dengan teknik substitusi, parsial, dan trigonometri.",
+                date: "2025-10-18"
+            },
+            {
+                title: "Video: Reaksi Redoks",
+                subject: "kimia",
+                difficulty: "sulit",
+                type: "video",
+                description: "Video tutorial lengkap tentang reaksi reduksi-oksidasi, cara menyetarakan persamaan redoks, dan aplikasinya.",
+                date: "2025-10-24"
+            }
+        ];
+
+        let filteredMaterials = [...allMaterials];
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const subject = document.getElementById('subjectFilter').value;
+            const difficulty = document.getElementById('difficultyFilter').value;
+            const type = document.getElementById('typeFilter').value;
+
+            filteredMaterials = allMaterials.filter(material => {
+                const matchSearch = searchTerm === '' || 
+                    material.title.toLowerCase().includes(searchTerm) || 
+                    material.description.toLowerCase().includes(searchTerm);
+                const matchSubject = subject === '' || material.subject === subject;
+                const matchDifficulty = difficulty === '' || material.difficulty === difficulty;
+                const matchType = type === '' || material.type === type;
+
+                return matchSearch && matchSubject && matchDifficulty && matchType;
+            });
+
+            displayResults();
+        }
+
+        function displayResults() {
+            const resultsArea = document.getElementById('resultsArea');
+            const resultsCount = document.getElementById('resultsCount');
+
+            if (filteredMaterials.length === 0) {
+                resultsArea.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <div class="empty-state-text">Tidak ada hasil ditemukan</div>
+                        <div class="empty-state-subtext">Coba ubah kata kunci atau filter pencarian Anda</div>
+                    </div>
+                `;
+                resultsCount.textContent = 'Tidak ada hasil';
+            } else {
+                resultsCount.textContent = `Menampilkan ${filteredMaterials.length} hasil`;
+                
+                resultsArea.innerHTML = filteredMaterials.map(material => `
+                    <div class="result-item">
+                        <div class="result-title">${material.title}</div>
+                        <div class="result-meta">
+                            <span>📚 ${material.subject.charAt(0).toUpperCase() + material.subject.slice(1)}</span>
+                            <span>⭐ ${material.difficulty.charAt(0).toUpperCase() + material.difficulty.slice(1)}</span>
+                            <span>📝 ${material.type.charAt(0).toUpperCase() + material.type.slice(1)}</span>
+                        </div>
+                        <div class="result-description">${material.description}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortBy').value;
+
+            switch(sortBy) {
+                case 'newest':
+                    filteredMaterials.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    break;
+                case 'title':
+                    filteredMaterials.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'popular':
+                    // Simulasi popularitas
+                    filteredMaterials.sort(() => Math.random() - 0.5);
+                    break;
+                default:
+                    // relevance - default order
+                    break;
+            }
+
+            displayResults();
+        }
+
+        // Initial display
+        displayResults();
+    </script>
+</body>
+</html>
