@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnUp - Manajemen Kelas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #012A4A 0%, #013a63 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: #012A4A;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .header-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-section h2 {
+            color: #012A4A;
+        }
+
+        .add-class-btn {
+            background: #012A4A;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-class-btn:hover {
+            background: #013a63;
+            transform: scale(1.05);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .tab.active {
+            background: #012A4A;
+            color: white;
+            border-color: #012A4A;
+        }
+
+        .tab:hover:not(.active) {
+            border-color: #012A4A;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .class-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-top: 5px solid #012A4A;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(1, 42, 74, 0.2);
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .class-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #012A4A;
+        }
+
+        .class-code {
+            background: #e0e0e0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .class-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .class-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #012A4A;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #013a63;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: #012A4A;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #012A4A;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #012A4A;
+            box-shadow: 0 0 0 3px rgba(1, 42, 74, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .student-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background: #012A4A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-section {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .classes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🎓 LearnUp - Manajemen Kelas</h1>
+        <div class="user-info">
+            <span>👨‍🏫 Guru: Pak Budi</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <h2>Kelola Kelas Anda</h2>
+                <p style="color: #666; margin-top: 0.5rem;">Buat, kelola, dan pantau kelas pembelajaran</p>
+            </div>
+            <button class="add-class-btn" onclick="openAddClassModal()">+ Buat Kelas Baru</button>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('active')">📚 Kelas Aktif</div>
+            <div class="tab" onclick="switchTab('archived')">📦 Arsip</div>
+            <div class="tab" onclick="switchTab('draft')">✏️ Draf</div>
+        </div>
+
+        <div class="classes-grid" id="classesGrid">
+            <!-- Classes will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Class Modal -->
+    <div class="modal" id="classModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Buat Kelas Baru</h3>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="classForm" onsubmit="saveClass(event)">
+                    <div class="form-group">
+                        <label>Nama Kelas *</label>
+                        <input type="text" id="className" placeholder="Contoh: Matematika Kelas 12 IPA" required>
+                        <span class="error-message" id="nameError">Nama kelas harus diisi</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mata Pelajaran *</label>
+                        <select id="classSubject" required>
+                            <option value="">Pilih Mata Pelajaran</option>
+                            <option value="matematika">Matematika</option>
+                            <option value="fisika">Fisika</option>
+                            <option value="kimia">Kimia</option>
+                            <option value="biologi">Biologi</option>
+                            <option value="bahasa">Bahasa Indonesia</option>
+                            <option value="english">Bahasa Inggris</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <textarea id="classDescription" placeholder="Jelaskan tentang kelas ini..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tingkat/Jenjang *</label>
+                        <select id="classLevel" required>
+                            <option value="">Pilih Tingkat</option>
+                            <option value="10">Kelas 10</option>
+                            <option value="11">Kelas 11</option>
+                            <option value="12">Kelas 12</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kapasitas Maksimal</label>
+                        <input type="number" id="classCapacity" placeholder="30" min="1" max="100">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Kelas</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Class Modal -->
+    <div class="modal" id="viewClassModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="viewModalTitle"></h3>
+                <button class="close-btn" onclick="closeViewModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="color: #012A4A; margin-bottom: 1rem;">Kode Kelas</h4>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="classCodeDisplay" style="font-size: 1.5rem; font-weight: 600; color: #012A4A;"></span>
+                        <button class="btn btn-primary" onclick="copyClassCode()">📋 Salin</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style="color: #012A4A; margin-bottom: 1rem;">Daftar Siswa (<span id="studentCount">0</span>)</h4>
+                    <div class="student-list" id="studentList">
+                        <!-- Students will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 2rem;">
+                    <button class="btn btn-secondary" onclick="closeViewModal()">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let classes = [
+            {
+                id: 1,
+                name: "Matematika Kelas 12 IPA",
+                subject: "matematika",
+                code: "MAT12A",
+                students: 28,
+                materials: 45,
+                status: "active",
+                level: "12",
+                description: "Kelas matematika untuk siswa kelas 12 IPA"
+            },
+            {
+                id: 2,
+                name: "Fisika Kelas 11",
+                subject: "fisika",
+                code: "FIS11B",
+                students: 32,
+                materials: 38,
+                status: "active",
+                level: "11",
+                description: "Pembelajaran fisika tingkat lanjut"
+            },
+            {
+                id: 3,
+                name: "Kimia Kelas 10",
+                subject: "kimia",
+                code: "KIM10A",
+                students: 25,
+                materials: 30,
+                status: "active",
+                level: "10",
+                description: "Pengenalan dasar kimia"
+            }
+        ];
+
+        let currentTab = 'active';
+        let editingClassId = null;
+
+        // Sample students data
+        const sampleStudents = [
+            { name: "Ahmad Rizki", email: "ahmad@email.com" },
+            { name: "Siti Nurhaliza", email: "siti@email.com" },
+            { name: "Budi Santoso", email: "budi@email.com" },
+            { name: "Dewi Lestari", email: "dewi@email.com" },
+            { name: "Eko Prasetyo", email: "eko@email.com" }
+        ];
+
+        function displayClasses() {
+            const grid = document.getElementById('classesGrid');
+            const filteredClasses = classes.filter(c => c.status === currentTab);
+
+            if (filteredClasses.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 15px;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">📚</div>
+                        <h3 style="color: #012A4A; margin-bottom: 0.5rem;">Tidak ada kelas</h3>
+                        <p style="color: #666;">Belum ada kelas di kategori ini</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredClasses.map(cls => `
+                <div class="class-card">
+                    <div class="class-header">
+                        <div class="class-name">${cls.name}</div>
+                        <div class="class-code">${cls.code}</div>
+                    </div>
+                    <div class="class-info">
+                        <span>👥 ${cls.students} Siswa</span>
+                        <span>📝 ${cls.materials} Materi</span>
+                        <span>📊 Kelas ${cls.level}</span>
+                    </div>
+                    <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">${cls.description}</p>
+                    <div class="class-actions">
+                        <button class="btn btn-primary" onclick="viewClass(${cls.id})">👁️ Lihat</button>
+                        <button class="btn btn-secondary" onclick="editClass(${cls.id})">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteClass(${cls.id})">🗑️ Hapus</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            displayClasses();
+        }
+
+        function openAddClassModal() {
+            editingClassId = null;
+            document.getElementById('modalTitle').textContent = 'Buat Kelas Baru';
+            document.getElementById('classForm').reset();
+            document.getElementById('classModal').classList.add('active');
+        }
+
+        function editClass(id) {
+            editingClassId = id;
+            const cls = classes.find(c => c.id === id);
+            
+            document.getElementById('modalTitle').textContent = 'Edit Kelas';
+            document.getElementById('className').value = cls.name;
+            document.getElementById('classSubject').value = cls.subject;
+            document.getElementById('classDescription').value = cls.description;
+            document.getElementById('classLevel').value = cls.level;
+            document.getElementById('classCapacity').value = 30;
+            
+            document.getElementById('classModal').classList.add('active');
+        }
+
+        function saveClass(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('className').value;
+            const subject = document.getElementById('classSubject').value;
+            const description = document.getElementById('classDescription').value;
+            const level = document.getElementById('classLevel').value;
+            
+            if (!name || !subject || !level) {
+                alert('Mohon lengkapi semua field yang wajib diisi');
+                return;
+            }
+
+            if (editingClassId) {
+                // Update existing class
+                const cls = classes.find(c => c.id === editingClassId);
+                cls.name = name;
+                cls.subject = subject;
+                cls.description = description;
+                cls.level = level;
+            } else {
+                // Add new class
+                const newClass = {
+                    id: classes.length + 1,
+                    name,
+                    subject,
+                    code: generateClassCode(),
+                    students: 0,
+                    materials: 0,
+                    status: 'active',
+                    level,
+                    description
+                };
+                classes.push(newClass);
+            }
+
+            closeModal();
+            displayClasses();
+            alert(editingClassId ? 'Kelas berhasil diupdate!' : 'Kelas baru berhasil dibuat!');
+        }
+
+        function generateClassCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function viewClass(id) {
+            const cls = classes.find(c => c.id === id);
+            document.getElementById('viewModalTitle').textContent = cls.name;
+            document.getElementById('classCodeDisplay').textContent = cls.code;
+            document.getElementById('studentCount').textContent = cls.students;
+            
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = sampleStudents.map(student => `
+                <div class="student-item">
+                    <div class="student-info">
+                        <div class="student-avatar">${student.name.charAt(0)}</div>
+                        <div>
+                            <div style="font-weight: 600;">${student.name}</div>
+                            <div style="font-size: 0.85rem; color: #666;">${student.email}</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" style="padding: 0.4rem 0.8rem;">Hapus</button>
+                </div>
+            `).join('');
+            
+            document.getElementById('viewClassModal').classList.add('active');
+        }
+
+        function copyClassCode() {
+            const code = document.getElementById('classCodeDisplay').textContent;
+            navigator.clipboard.writeText(code);
+            alert('Kode kelas berhasil disalin: ' + code);
+        }
+
+        function deleteClass(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus kelas ini?')) {
+                classes = classes.filter(c => c.id !== id);
+                displayClasses();
+                alert('Kelas berhasil dihapus!');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('classModal').classList.remove('active');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewClassModal').classList.remove('active');
+        }
+
+        // Initialize
+        displayClasses();
+    </script>
+</body>
+</html>
