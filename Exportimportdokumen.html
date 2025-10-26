@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnUp - Export & Import Data</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #012A4A 0%, #013a63 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: #012A4A;
+            padding: 1rem 2rem;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            color: #012A4A;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+        }
+
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: #012A4A;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .export-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #012A4A;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .export-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 15px rgba(1, 42, 74, 0.1);
+        }
+
+        .export-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #012A4A;
+            margin-bottom: 0.5rem;
+        }
+
+        .export-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #012A4A;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #013a63;
+        }
+
+        .export-btn-secondary {
+            background: #10b981;
+        }
+
+        .export-btn-secondary:hover {
+            background: #059669;
+        }
+
+        .import-area {
+            border: 3px dashed #012A4A;
+            border-radius: 10px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .import-area:hover {
+            background: #e9ecef;
+            border-color: #013a63;
+        }
+
+        .import-area.dragover {
+            background: #d1e7ff;
+            border-color: #012A4A;
+        }
+
+        .import-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .import-text {
+            font-size: 1.1rem;
+            color: #012A4A;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .import-subtext {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .uploaded-files {
+            margin-top: 1.5rem;
+        }
+
+        .file-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #012A4A;
+        }
+
+        .file-size {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .remove-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #b91c1c;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            color: #012A4A;
+            font-weight: 600;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #012A4A;
+        }
+
+        .filter-group select {
+            padding: 0.7rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #012A4A, #013a63);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .history-table {
+                font-size: 0.85rem;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🎓 LearnUp - Export & Import Data</h1>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Kelola Data Pembelajaran</h2>
+            <p>Export data untuk backup atau import data untuk restore/migrasi</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">156</div>
+                <div class="stat-label">Total Export</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">42</div>
+                <div class="stat-label">Total Import</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2.4 MB</div>
+                <div class="stat-label">Data Tersimpan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="section">
+            <h3 class="section-title">📤 Export Data</h3>
+            
+            <div class="export-options">
+                <div class="export-card">
+                    <div class="export-icon">📊</div>
+                    <div class="export-title">Data Progress Belajar</div>
+                    <div class="export-description">Export semua data progress pembelajaran siswa dalam format CSV</div>
+                    <button class="export-btn" onclick="exportData('progress', 'csv')">Download CSV</button>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">👥</div>
+                    <div class="export-title">Data Siswa</div>
+                    <div class="export-description">Export daftar siswa beserta informasi profil mereka</div>
+                    <button class="export-btn" onclick="exportData('students', 'csv')">Download CSV</button>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">📝</div>
+                    <div class="export-title">Hasil Quiz & Latihan</div>
+                    <div class="export-description">Export semua hasil quiz dan latihan soal siswa</div>
+                    <button class="export-btn" onclick="exportData('quiz', 'csv')">Download CSV</button>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">📚</div>
+                    <div class="export-title">Data Kelas</div>
+                    <div class="export-description">Export informasi kelas dan materi pembelajaran</div>
+                    <button class="export-btn" onclick="exportData('classes', 'json')">Download JSON</button>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">📈</div>
+                    <div class="export-title">Laporan Lengkap</div>
+                    <div class="export-description">Export semua data dalam satu file JSON komprehensif</div>
+                    <button class="export-btn export-btn-secondary" onclick="exportData('all', 'json')">Download Semua</button>
+                </div>
+
+                <div class="export-card">
+                    <div class="export-icon">💬</div>
+                    <div class="export-title">Diskusi & Forum</div>
+                    <div class="export-description">Export riwayat diskusi dan forum kelas</div>
+                    <button class="export-btn" onclick="exportData('forum', 'csv')">Download CSV</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Section -->
+        <div class="section">
+            <h3 class="section-title">📥 Import Data</h3>
+            
+            <div class="import-area" id="importArea" onclick="document.getElementById('fileInput').click()">
+                <div class="import-icon">📁</div>
+                <div class="import-text">Klik atau Drag & Drop File</div>
+                <div class="import-subtext">Mendukung format CSV dan JSON (Maks. 10MB)</div>
+            </div>
+            
+            <input type="file" id="fileInput" class="file-input" accept=".csv,.json" multiple onchange="handleFileSelect(event)">
+
+            <div class="uploaded-files" id="uploadedFiles" style="display: none;">
+                <h4 style="color: #012A4A; margin-bottom: 1rem;">File yang Diunggah:</h4>
+                <div id="fileList"></div>
+                <button class="export-btn" style="margin-top: 1rem; max-width: 300px;" onclick="processImport()">
+                    ✅ Proses Import
+                </button>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="section">
+            <h3 class="section-title">📋 Riwayat Export & Import</h3>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Tipe Aksi</label>
+                    <select id="actionFilter" onchange="filterHistory()">
+                        <option value="">Semua</option>
+                        <option value="export">Export</option>
+                        <option value="import">Import</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="statusFilter" onchange="filterHistory()">
+                        <option value="">Semua</option>
+                        <option value="success">Berhasil</option>
+                        <option value="pending">Proses</option>
+                        <option value="failed">Gagal</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Periode</label>
+                    <select id="periodFilter" onchange="filterHistory()">
+                        <option value="">Semua</option>
+                        <option value="today">Hari Ini</option>
+                        <option value="week">Minggu Ini</option>
+                        <option value="month">Bulan Ini</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal & Waktu</th>
+                            <th>Aksi</th>
+                            <th>Tipe Data</th>
+                            <th>Ukuran</th>
+                            <th>Status</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for export
+        const sampleData = {
+            progress: [
+                { siswa: "Ahmad Rizki", kelas: "Matematika 12", progress: "85%", materi_selesai: 45, total_materi: 53 },
+                { siswa: "Siti Nurhaliza", kelas: "Fisika 11", progress: "92%", materi_selesai: 38, total_materi: 41 },
+                { siswa: "Budi Santoso", kelas: "Kimia 10", progress: "78%", materi_selesai: 28, total_materi: 36 }
+            ],
+            students: [
+                { id: 1, nama: "Ahmad Rizki", email: "ahmad@email.com", kelas: "12 IPA", tanggal_daftar: "2025-01-15" },
+                { id: 2, nama: "Siti Nurhaliza", email: "siti@email.com", kelas: "11 IPA", tanggal_daftar: "2025-01-18" },
+                { id: 3, nama: "Budi Santoso", email: "budi@email.com", kelas: "10 IPA", tanggal_daftar: "2025-01-20" }
+            ],
+            quiz: [
+                { siswa: "Ahmad Rizki", quiz: "Aljabar Dasar", skor: 85, waktu: "25 menit", tanggal: "2025-10-20" },
+                { siswa: "Siti Nurhaliza", quiz: "Kinematika", skor: 92, waktu: "22 menit", tanggal: "2025-10-21" },
+                { siswa: "Budi Santoso", quiz: "Struktur Atom", skor: 78, waktu: "28 menit", tanggal: "2025-10-22" }
+            ]
+        };
+
+        // History data
+        let historyData = [
+            { date: "2025-10-26 14:30", action: "export", type: "Data Progress", size: "245 KB", status: "success", user: "Pak Budi" },
+            { date: "2025-10-26 13:15", action: "import", type: "Data Siswa", size: "182 KB", status: "success", user: "Bu Ani" },
+            { date: "2025-10-25 16:45", action: "export", type: "Hasil Quiz", size: "328 KB", status: "success", user: "Pak Budi" },
+            { date: "2025-10-25 10:20", action: "export", type: "Laporan Lengkap", size: "1.2 MB", status: "success", user: "Admin" },
+            { date: "2025-10-24 15:30", action: "import", type: "Data Kelas", size: "156 KB", status: "failed", user: "Bu Ani" },
+            { date: "2025-10-24 09:10", action: "export", type: "Data Siswa", size: "198 KB", status: "success", user: "Pak Budi" }
+        ];
+
+        let uploadedFiles = [];
+
+        // Convert data to CSV format
+        function convertToCSV(data) {
+            if (data.length === 0) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csvRows = [headers.join(',')];
+            
+            for (const row of data) {
+                const values = headers.map(header => {
+                    const value = row[header];
+                    return `"${value}"`;
+                });
+                csvRows.push(values.join(','));
+            }
+            
+            return csvRows.join('\n');
+        }
+
+        // Export data function
+        function exportData(type, format) {
+            let data, filename;
+            
+            switch(type) {
+                case 'progress':
+                    data = sampleData.progress;
+                    filename = `progress_belajar_${Date.now()}.${format}`;
+                    break;
+                case 'students':
+                    data = sampleData.students;
+                    filename = `data_siswa_${Date.now()}.${format}`;
+                    break;
+                case 'quiz':
+                    data = sampleData.quiz;
+                    filename = `hasil_quiz_${Date.now()}.${format}`;
+                    break;
+                case 'classes':
+                    data = { classes: ["Matematika 12", "Fisika 11", "Kimia 10"] };
+                    filename = `data_kelas_${Date.now()}.${format}`;
+                    break;
+                case 'all':
+                    data = sampleData;
+                    filename = `backup_lengkap_${Date.now()}.${format}`;
+                    break;
+                case 'forum':
+                    data = [{ topik: "Diskusi Aljabar", peserta: 15, pesan: 48 }];
+                    filename = `diskusi_forum_${Date.now()}.${format}`;
+                    break;
+                default:
+                    data = [];
+            }
+
+            let content, mimeType;
+            
+            if (format === 'csv') {
+                content = convertToCSV(data);
+                mimeType = 'text/csv';
+            } else {
+                content = JSON.stringify(data, null, 2);
+                mimeType = 'application/json';
+            }
+
+            // Create download
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Add to history
+            const newHistory = {
+                date: new Date().toLocaleString('id-ID'),
+                action: 'export',
+                type: type.charAt(0).toUpperCase() + type.slice(1),
+                size: Math.round(blob.size / 1024) + ' KB',
+                status: 'success',
+                user: 'Current User'
+            };
+            historyData.unshift(newHistory);
+            displayHistory();
+
+            alert(`✅ File ${filename} berhasil didownload!`);
+        }
+
+        // Drag and drop handlers
+        const importArea = document.getElementById('importArea');
+
+        importArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            importArea.classList.add('dragover');
+        });
+
+        importArea.addEventListener('dragleave', () => {
+            importArea.classList.remove('dragover');
+        });
+
+        importArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            importArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        // File selection handler
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            uploadedFiles = Array.from(files);
+            displayUploadedFiles();
+        }
+
+        function displayUploadedFiles() {
+            const fileList = document.getElementById('fileList');
+            const uploadedFilesDiv = document.getElementById('uploadedFiles');
+            
+            if (uploadedFiles.length === 0) {
+                uploadedFilesDiv.style.display = 'none';
+                return;
+            }
+
+            uploadedFilesDiv.style.display = 'block';
+            
+            fileList.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">${file.name.endsWith('.csv') ? '📊' : '📄'}</div>
+                        <div class="file-details">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${(file.size / 1024).toFixed(2)} KB</div>
+                        </div>
+                    </div>
+                    <button class="remove-btn" onclick="removeFile(${index})">✕ Hapus</button>
+                </div>
+            `).join('');
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            displayUploadedFiles();
+        }
+
+        function processImport() {
+            if (uploadedFiles.length === 0) {
+                alert('Tidak ada file yang dipilih!');
+                return;
+            }
+
+            // Simulate import process
+            alert(`✅ Berhasil mengimport ${uploadedFiles.length} file!`);
+
+            // Add to history
+            uploadedFiles.forEach(file => {
+                const newHistory = {
+                    date: new Date().toLocaleString('id-ID'),
+                    action: 'import',
+                    type: file.name,
+                    size: (file.size / 1024).toFixed(2) + ' KB',
+                    status: 'success',
+                    user: 'Current User'
+                };
+                historyData.unshift(newHistory);
+            });
+
+            uploadedFiles = [];
+            displayUploadedFiles();
+            displayHistory();
+            document.getElementById('fileInput').value = '';
+        }
+
+        // Display history
+        function displayHistory() {
+            const tbody = document.getElementById('historyTableBody');
+            const actionFilter = document.getElementById('actionFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = historyData;
+
+            if (actionFilter) {
+                filtered = filtered.filter(h => h.action === actionFilter);
+            }
+
+            if (statusFilter) {
+                filtered = filtered.filter(h => h.status === statusFilter);
+            }
+
+            tbody.innerHTML = filtered.map(history => `
+                <tr>
+                    <td>${history.date}</td>
+                    <td>
+                        <span style="padding: 0.3rem 0.8rem; background: ${history.action === 'export' ? '#dbeafe' : '#fef3c7'}; 
+                                     color: ${history.action === 'export' ? '#1e40af' : '#92400e'}; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                            ${history.action === 'export' ? '📤 Export' : '📥 Import'}
+                        </span>
+                    </td>
+                    <td>${history.type}</td>
+                    <td>${history.size}</td>
+                    <td>
+                        <span class="status-badge status-${history.status}">
+                            ${history.status === 'success' ? '✅ Berhasil' : history.status === 'pending' ? '⏳ Proses' : '❌ Gagal'}
+                        </span>
+                    </td>
+                    <td>${history.user}</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterHistory() {
+            displayHistory();
+        }
+
+        // Initialize
+        displayHistory();
+    </script>
+</body>
+</html>
