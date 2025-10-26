@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum Diskusi | LearnUp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <h2>LearnUp</h2>
+    </div>
+
+    <div class="nav-title-center">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="forum.html" class="active">Forum Diskusi</a>
+    </div>
+
+    <div class="nav-right">
+      <div class="user-info">
+        <span id="userName">Nama Pengguna</span>
+        <p id="userEmail">email@example.com</p>
+      </div>
+      <div class="profile-dropdown">
+        <img src="user.jpg" alt="User" class="profile-pic" id="profilePic">
+        <div class="dropdown-menu" id="dropdownMenu">
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== FORUM SECTION ====== -->
+  <main class="forum-wrapper">
+    <section class="forum-container">
+      <h2>💬 Forum Diskusi</h2>
+      <p>Bertanya, berbagi, dan belajar bersama di komunitas LearnUp!</p>
+
+      <!-- Form tambah diskusi -->
+      <div class="forum-form">
+        <textarea id="newPost" placeholder="Tulis pertanyaan atau diskusimu di sini..." required></textarea>
+        <button id="postBtn" class="btn">Kirim Diskusi</button>
+      </div>
+
+      <!-- Daftar diskusi -->
+      <div id="forumPosts" class="forum-posts"></div>
+    </section>
+  </main>
+
+  <script src="forum.js"></script>
+</body>
+</html>
