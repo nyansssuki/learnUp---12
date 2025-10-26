@@ -357,3 +357,176 @@ input:focus {
 .nav-title-center a:hover {
   opacity: 0.8;
 }
+
+/* FORUM */
+
+/* ========================= */
+/* ====== FORUM STYLE ====== */
+/* ========================= */
+.forum-wrapper {
+  padding: 40px 60px;
+}
+
+.forum-container {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  padding: 25px 35px;
+}
+
+.forum-container h2 {
+  margin-top: 0;
+  color: #012A4A;
+}
+
+.forum-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.forum-form textarea {
+  width: 100%;
+  min-height: 80px;
+  border: 1.5px solid #89C2D9;
+  border-radius: 10px;
+  padding: 10px;
+  font-family: 'Poppins', sans-serif;
+  resize: vertical;
+}
+
+.forum-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.forum-post {
+  background: #f7fbff;
+  border-left: 5px solid #014F86;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.post-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+
+.post-header strong {
+  font-size: 15px;
+  color: #012A4A;
+}
+
+.post-header span {
+  font-size: 13px;
+  color: #777;
+}
+
+.post-time {
+  font-size: 11px;
+  color: #999;
+  margin: 2px 0;
+}
+
+.post-content {
+  font-size: 14px;
+  color: #333;
+  margin: 5px 0 0 0;
+}
+
+.no-post {
+  text-align: center;
+  color: #888;
+}
+
+
+/* tambahan */
+
+.nav-title-center a {
+  text-decoration: none;
+  color: #014f86;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.nav-title-center a:hover {
+  background-color: #dff6ff;
+}
+
+.nav-title-center a.active {
+  background-color: #014f86;
+  color: white;
+}
+
+/* REPLY */
+
+/* ========================= */
+/* ====== BALASAN FORUM ==== */
+/* ========================= */
+
+.reply {
+  background: #eef6fb;
+  border-left: 4px solid #89C2D9;
+  margin-top: 10px;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.reply-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+}
+
+.reply-header strong {
+  font-size: 14px;
+  color: #012A4A;
+}
+
+.reply-header span {
+  font-size: 12px;
+  color: #777;
+}
+
+.reply-time {
+  font-size: 11px;
+  color: #999;
+}
+
+.reply-content {
+  font-size: 13px;
+  color: #333;
+}
+
+.reply-input {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid #89C2D9;
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 10px;
+  resize: vertical;
+  font-family: 'Poppins', sans-serif;
+}
+
+.send-reply-btn, .reply-btn {
+  background-color: #014F86;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.send-reply-btn:hover,
+.reply-btn:hover {
+  background-color: #012A4A;
+}
